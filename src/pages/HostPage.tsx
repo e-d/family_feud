@@ -198,6 +198,11 @@ export function HostPage() {
             <div className="preview">
               <Stage state={state} />
             </div>
+            <label className="switch music-switch">
+              <input type="checkbox" checked={state.music} onChange={() => dispatch({ type: 'toggleMusic' })} />
+              <span className="switch__track" aria-hidden />
+              Music on the title screen
+            </label>
             <div className="theme-row">
               <span className="eyebrow">Theme</span>
               <ThemePicker

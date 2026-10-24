@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Logo } from '../components/Logo'
 import { Stage } from '../components/Stage'
-import { playBuzzer, playDing, playFanfare, unlockAudio } from '../sound'
+import { startMusic, stopMusic } from '../music'
+import { playBuzzer, playCelebration, playDing, playFanfare, playThemeSting, unlockAudio } from '../sound'
 import { loadThemePreference, useLiveState } from '../storage'
 import { useDocumentTheme } from '../themes'
 import type { LiveState } from '../types'
@@ -10,6 +11,7 @@ export function BoardPage() {
   const state = useLiveState()
   const [armed, setArmed] = useState(false)
   useCues(state, armed)
+  useTitleMusic(state, armed)
   useDocumentTheme(state?.theme ?? loadThemePreference())
 
   useEffect(() => {
@@ -65,7 +67,12 @@ function useCues(state: LiveState | null, enabled: boolean) {
     prev.current = state
     if (!enabled || !state || !before || before.game.id !== state.game.id) return
 
-    if (state.strikeNonce > before.strikeNonce) {
+    // One cue per change; starting play takes priority over whatever started it.
+    if (state.phase === 'final' && before.phase !== 'final') {
+      playCelebration()
+    } else if (before.phase === 'title' && state.phase === 'round') {
+      playThemeSting(state.theme)
+    } else if (state.strikeNonce > before.strikeNonce) {
       playBuzzer()
     } else if (state.round === before.round && countTrue(state.revealed) > countTrue(before.revealed)) {
       playDing()
@@ -73,6 +80,19 @@ function useCues(state: LiveState | null, enabled: boolean) {
       playFanfare()
     }
   }, [state, enabled])
+}
+
+/** Loops theme music while the title screen is up. */
+function useTitleMusic(state: LiveState | null, enabled: boolean) {
+  const play = enabled && state?.phase === 'title' && state.music
+  const theme = state?.theme ?? 'classic'
+
+  useEffect(() => {
+    if (play) startMusic(theme)
+    else stopMusic()
+  }, [play, theme])
+
+  useEffect(() => stopMusic, [])
 }
 
 const countTrue = (xs: boolean[]) => xs.filter(Boolean).length
