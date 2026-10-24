@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import { MAX_ANSWERS, bank, currentQuestion } from '../game'
 import type { Answer, LiveState } from '../types'
 import { Logo } from './Logo'
+import { ThemeDecor } from './ThemeDecor'
 
 /** The audience-facing board. Pure render of the live state, sized in container units so it scales to any screen. */
 export function Stage({ state }: { state: LiveState }) {
   return (
-    <div className="stage">
+    <div className="stage" data-theme={state.theme}>
       <div className="stage__spot" aria-hidden />
+      <ThemeDecor theme={state.theme} />
       {state.phase === 'title' && <TitleScene state={state} />}
       {state.phase === 'round' && <RoundScene state={state} />}
       {state.phase === 'final' && <FinalScene state={state} />}

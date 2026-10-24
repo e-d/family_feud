@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+import { type ThemeId, isThemeId } from './themes'
 import type { Game, LiveState } from './types'
 
 const GAMES_KEY = 'ff:games'
 const LIVE_KEY = 'ff:live'
+const THEME_KEY = 'ff:theme'
 const CHANNEL = 'ff:live'
 
 function read<T>(key: string, fallback: T): T {
@@ -32,7 +34,18 @@ export function saveGames(games: Game[]) {
 }
 
 export function loadLive(): LiveState | null {
-  return read<LiveState | null>(LIVE_KEY, null)
+  const state = read<LiveState | null>(LIVE_KEY, null)
+  // Games saved before themes existed have no theme field.
+  return state && { ...state, theme: isThemeId(state.theme) ? state.theme : 'classic' }
+}
+
+export function loadThemePreference(): ThemeId {
+  const theme = read<unknown>(THEME_KEY, 'classic')
+  return isThemeId(theme) ? theme : 'classic'
+}
+
+export function saveThemePreference(theme: ThemeId) {
+  write(THEME_KEY, theme)
 }
 
 let channel: BroadcastChannel | null = null

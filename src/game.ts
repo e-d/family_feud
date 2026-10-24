@@ -1,3 +1,4 @@
+import type { ThemeId } from './themes'
 import type { Game, LiveState, Multiplier } from './types'
 
 export const MAX_ANSWERS = 8
@@ -12,12 +13,13 @@ export type Action =
   | { type: 'undoAward' }
   | { type: 'goToRound'; round: number }
   | { type: 'setMultiplier'; multiplier: Multiplier }
+  | { type: 'setTheme'; theme: ThemeId }
   | { type: 'toggleQuestion' }
   | { type: 'setPhase'; phase: LiveState['phase'] }
   | { type: 'adjustScore'; team: 0 | 1; delta: number }
   | { type: 'renameTeam'; team: 0 | 1; name: string }
 
-export function newGame(game: Game, teamNames: [string, string]): LiveState {
+export function newGame(game: Game, teamNames: [string, string], theme: ThemeId = 'classic'): LiveState {
   return {
     game,
     phase: 'title',
@@ -27,6 +29,7 @@ export function newGame(game: Game, teamNames: [string, string]): LiveState {
     strikeNonce: 0,
     showQuestion: false,
     multiplier: 1,
+    theme,
     teams: [
       { name: teamNames[0], score: 0 },
       { name: teamNames[1], score: 0 },
@@ -94,6 +97,8 @@ export function reduce(state: LiveState, action: Action): LiveState {
     }
     case 'setMultiplier':
       return { ...state, multiplier: action.multiplier }
+    case 'setTheme':
+      return { ...state, theme: action.theme }
     case 'toggleQuestion':
       return { ...state, showQuestion: !state.showQuestion }
     case 'setPhase':

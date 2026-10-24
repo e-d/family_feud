@@ -34,4 +34,10 @@ describe('game reducer', () => {
     expect(s.strikes).toBe(0)
     expect(s.revealed.every((r) => !r)).toBe(true)
   })
+
+  it('starts with the chosen theme and can switch mid-game', () => {
+    const s = newGame(sampleGame(), ['A', 'B'], 'halloween')
+    expect(s.theme).toBe('halloween')
+    expect(reduce(s, { type: 'setTheme', theme: 'christmas' }).theme).toBe('christmas')
+  })
 })

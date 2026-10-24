@@ -2,7 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { Logo } from '../components/Logo'
 import { Stage } from '../components/Stage'
 import { type Action, MAX_STRIKES, bank, currentQuestion, reduce } from '../game'
-import { loadLive, publishLive } from '../storage'
+import { ThemePicker } from '../components/ThemePicker'
+import { loadLive, loadThemePreference, publishLive, saveThemePreference } from '../storage'
+import { useDocumentTheme } from '../themes'
 import type { LiveState, Multiplier, Phase } from '../types'
 import { navigate } from '../router'
 
@@ -19,6 +21,7 @@ export function HostPage() {
   }, [])
 
   useShortcuts(state, dispatch)
+  useDocumentTheme(state?.theme ?? loadThemePreference())
 
   if (!state) {
     return (
@@ -194,6 +197,16 @@ export function HostPage() {
             </div>
             <div className="preview">
               <Stage state={state} />
+            </div>
+            <div className="theme-row">
+              <span className="eyebrow">Theme</span>
+              <ThemePicker
+                value={state.theme}
+                onChange={(theme) => {
+                  saveThemePreference(theme)
+                  dispatch({ type: 'setTheme', theme })
+                }}
+              />
             </div>
           </section>
 

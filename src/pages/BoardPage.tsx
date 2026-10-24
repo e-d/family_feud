@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from 'react'
 import { Logo } from '../components/Logo'
 import { Stage } from '../components/Stage'
 import { playBuzzer, playDing, playFanfare, unlockAudio } from '../sound'
-import { useLiveState } from '../storage'
+import { loadThemePreference, useLiveState } from '../storage'
+import { useDocumentTheme } from '../themes'
 import type { LiveState } from '../types'
 
 export function BoardPage() {
   const state = useLiveState()
   const [armed, setArmed] = useState(false)
   useCues(state, armed)
+  useDocumentTheme(state?.theme ?? loadThemePreference())
 
   useEffect(() => {
     document.title = 'Family Feud · Board'
@@ -30,7 +32,7 @@ export function BoardPage() {
       {state ? (
         <Stage state={state} />
       ) : (
-        <div className="stage">
+        <div className="stage" data-theme={loadThemePreference()}>
           <div className="stage__spot" aria-hidden />
           <div className="scene scene--title">
             <Logo size="stage" />
