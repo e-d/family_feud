@@ -2,6 +2,8 @@
 
 A single-page web app for running a game of Family Feud at home: import your own survey questions, host from your laptop, and put the board up on a TV or projector.
 
+**Play it live: [family-feud-gules.vercel.app](https://family-feud-gules.vercel.app)**
+
 ## How it works
 
 1. **Pick a ready-made game or import your own.** There are 14 ready-made games (six rounds each) across categories like Food & Drink, Kids, Animals and Grown-Ups, plus one per holiday that switches to its matching theme. Or upload a CSV, JSON or plain-text file, or paste text (formats below). Games are saved in your browser.
