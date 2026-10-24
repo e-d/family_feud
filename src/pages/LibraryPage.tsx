@@ -4,13 +4,22 @@ import { newGame } from '../game'
 import { CSV_TEMPLATE, parseQuestions } from '../importer'
 import { navigate } from '../router'
 import { sampleGame } from '../sample'
-import { loadGames, loadLive, publishLive, saveGames } from '../storage'
+import { ThemePicker } from '../components/ThemePicker'
+import { loadGames, loadLive, loadThemePreference, publishLive, saveGames, saveThemePreference } from '../storage'
+import { type ThemeId, useDocumentTheme } from '../themes'
 import type { Game } from '../types'
 
 export function LibraryPage() {
   const [games, setGames] = useState<Game[]>(loadGames)
   const [setupId, setSetupId] = useState<string | null>(null)
   const live = useMemo(loadLive, [])
+  const [theme, setTheme] = useState<ThemeId>(loadThemePreference)
+  useDocumentTheme(theme)
+
+  const chooseTheme = (next: ThemeId) => {
+    setTheme(next)
+    saveThemePreference(next)
+  }
 
   useEffect(() => {
     document.title = 'Family Feud'
@@ -31,7 +40,7 @@ export function LibraryPage() {
   }
 
   const start = (game: Game, teams: [string, string]) => {
-    publishLive(newGame(game, teams))
+    publishLive(newGame(game, teams, theme))
     navigate('/host')
   }
 
@@ -85,7 +94,12 @@ export function LibraryPage() {
                     <p className="game-card__first">“{game.questions[0]?.prompt}”</p>
                   </div>
                   {setupId === game.id ? (
-                    <TeamSetup onStart={(teams) => start(game, teams)} onCancel={() => setSetupId(null)} />
+                    <TeamSetup
+                      theme={theme}
+                      onThemeChange={chooseTheme}
+                      onStart={(teams) => start(game, teams)}
+                      onCancel={() => setSetupId(null)}
+                    />
                   ) : (
                     <div className="game-card__actions">
                       <button className="btn btn--gold" onClick={() => setSetupId(game.id)}>
@@ -108,7 +122,17 @@ export function LibraryPage() {
   )
 }
 
-function TeamSetup({ onStart, onCancel }: { onStart: (teams: [string, string]) => void; onCancel: () => void }) {
+function TeamSetup({
+  theme,
+  onThemeChange,
+  onStart,
+  onCancel,
+}: {
+  theme: ThemeId
+  onThemeChange: (theme: ThemeId) => void
+  onStart: (teams: [string, string]) => void
+  onCancel: () => void
+}) {
   const [a, setA] = useState('')
   const [b, setB] = useState('')
   return (
@@ -128,6 +152,10 @@ function TeamSetup({ onStart, onCancel }: { onStart: (teams: [string, string]) =
         <span>Right family</span>
         <input value={b} onChange={(e) => setB(e.target.value)} placeholder="Team 2" maxLength={24} />
       </label>
+      <div className="team-setup__theme">
+        <span>Theme</span>
+        <ThemePicker value={theme} onChange={onThemeChange} />
+      </div>
       <div className="team-setup__actions">
         <button className="btn btn--gold" type="submit">
           Start game

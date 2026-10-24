@@ -1,3 +1,5 @@
+import type { ThemeId } from './themes'
+
 export interface Answer {
   text: string
   points: number
@@ -34,6 +36,7 @@ export interface LiveState {
   strikeNonce: number
   showQuestion: boolean
   multiplier: Multiplier
+  theme: ThemeId
   teams: [Team, Team]
   award: { team: 0 | 1; points: number } | null
 }
