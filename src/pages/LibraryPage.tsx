@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Logo } from '../components/Logo'
+import { PackBrowser } from '../components/PackBrowser'
 import { newGame } from '../game'
 import { CSV_TEMPLATE, parseQuestions } from '../importer'
 import { navigate } from '../router'
-import { sampleGame } from '../sample'
+import type { Pack } from '../packs'
 import { ThemePicker } from '../components/ThemePicker'
 import { loadGames, loadLive, loadThemePreference, publishLive, saveGames, saveThemePreference } from '../storage'
 import { type ThemeId, useDocumentTheme } from '../themes'
@@ -30,9 +31,29 @@ export function LibraryPage() {
     saveGames(next)
   }
 
+  const gamesRef = useRef<HTMLElement>(null)
+  const addedPacks = useMemo(() => new Set(games.flatMap((g) => (g.packId ? [g.packId] : []))), [games])
+
+  const openSetup = (game: Game) => {
+    setSetupId(game.id)
+    if (game.theme) chooseTheme(game.theme)
+  }
+
   const addGame = (game: Game) => {
     update([game, ...games])
-    setSetupId(game.id)
+    openSetup(game)
+  }
+
+  const addPack = (pack: Pack) => {
+    addGame({
+      id: crypto.randomUUID(),
+      title: pack.title,
+      questions: pack.questions,
+      createdAt: Date.now(),
+      packId: pack.id,
+      theme: pack.theme,
+    })
+    gamesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   const removeGame = (game: Game) => {
@@ -62,7 +83,7 @@ export function LibraryPage() {
       </header>
 
       <main className="library-grid">
-        <section aria-labelledby="games-heading">
+        <section aria-labelledby="games-heading" ref={gamesRef} className="games">
           <div className="section-head">
             <h2 id="games-heading">Your games</h2>
             {games.length > 0 && (
@@ -75,10 +96,13 @@ export function LibraryPage() {
           {games.length === 0 ? (
             <div className="empty">
               <p>
-                <b>No games yet.</b> Import a set of questions, or try the sample to see how the board works.
+                <b>No games yet.</b> Pick a ready-made game, or import your own questions.
               </p>
-              <button className="btn btn--gold" onClick={() => addGame(sampleGame())}>
-                Add the sample game
+              <button
+                className="btn btn--gold"
+                onClick={() => document.getElementById('ready-made')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Browse ready-made games
               </button>
             </div>
           ) : (
@@ -102,7 +126,7 @@ export function LibraryPage() {
                     />
                   ) : (
                     <div className="game-card__actions">
-                      <button className="btn btn--gold" onClick={() => setSetupId(game.id)}>
+                      <button className="btn btn--gold" onClick={() => openSetup(game)}>
                         Play
                       </button>
                       <button className="btn btn--ghost" onClick={() => removeGame(game)}>
@@ -118,6 +142,8 @@ export function LibraryPage() {
 
         <ImportPanel onSave={addGame} />
       </main>
+
+      <PackBrowser addedIds={addedPacks} onAdd={addPack} />
     </div>
   )
 }

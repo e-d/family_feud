@@ -1,6 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import { bank, newGame, reduce } from './game'
-import { sampleGame } from './sample'
+import type { Game } from './types'
+
+const sampleGame = (): Game => ({
+  id: 'test',
+  title: 'Test',
+  createdAt: 0,
+  questions: [
+    { prompt: 'Name something people bring to the beach', answers: [{ text: 'Towel', points: 38 }, { text: 'Sunscreen', points: 24 }, { text: 'Umbrella', points: 14 }] },
+    { prompt: 'Name a pizza topping', answers: [{ text: 'Pepperoni', points: 48 }, { text: 'Mushrooms', points: 17 }] },
+  ],
+})
 
 const start = () => reduce(newGame(sampleGame(), ['A', 'B']), { type: 'goToRound', round: 0 })
 
