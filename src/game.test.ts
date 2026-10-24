@@ -40,4 +40,10 @@ describe('game reducer', () => {
     expect(s.theme).toBe('halloween')
     expect(reduce(s, { type: 'setTheme', theme: 'christmas' }).theme).toBe('christmas')
   })
+
+  it('plays title music by default and lets the host turn it off', () => {
+    const s = newGame(sampleGame(), ['A', 'B'])
+    expect(s.music).toBe(true)
+    expect(reduce(s, { type: 'toggleMusic' }).music).toBe(false)
+  })
 })

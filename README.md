@@ -10,6 +10,8 @@ A single-page web app for running a game of Family Feud at home: import your own
 4. **Pick a theme** when you start (Classic, Halloween, Thanksgiving, Christmas, Valentine's Day or Independence Day). You can switch it from the host panel mid-game; the TV updates live.
 5. **Host** from the control panel: reveal answers, add strikes, set double/triple points, and give the bank to a team.
 
+**Sound** plays on the TV window once you click *Go full screen with sound*: soft theme music on the title screen (you can turn it off in the host panel), a theme sound when play starts (a wolf howl for Halloween, sleigh bells for Christmas, and so on), dings and buzzers during rounds, and applause on the final scores. Every sound is generated in the browser, so there are no audio files.
+
 The host window and the board stay in sync through the browser (`BroadcastChannel`), so both windows need to be in the same browser on the same computer. There's no server.
 
 ### Host keyboard shortcuts

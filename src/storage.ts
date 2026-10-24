@@ -35,8 +35,8 @@ export function saveGames(games: Game[]) {
 
 export function loadLive(): LiveState | null {
   const state = read<LiveState | null>(LIVE_KEY, null)
-  // Games saved before themes existed have no theme field.
-  return state && { ...state, theme: isThemeId(state.theme) ? state.theme : 'classic' }
+  // Games saved before themes and music existed lack those fields.
+  return state && { ...state, theme: isThemeId(state.theme) ? state.theme : 'classic', music: state.music ?? true }
 }
 
 export function loadThemePreference(): ThemeId {

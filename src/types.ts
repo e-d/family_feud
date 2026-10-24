@@ -37,6 +37,8 @@ export interface LiveState {
   showQuestion: boolean
   multiplier: Multiplier
   theme: ThemeId
+  /** Soft music on the TV's title screen. */
+  music: boolean
   teams: [Team, Team]
   award: { team: 0 | 1; points: number } | null
 }

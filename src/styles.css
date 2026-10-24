@@ -1896,6 +1896,10 @@ h2 {
   color: var(--ink-dim);
 }
 
+.music-switch {
+  margin-top: 1.1rem;
+}
+
 .theme-row {
   display: grid;
   gap: 0.6rem;

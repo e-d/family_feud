@@ -15,6 +15,7 @@ export type Action =
   | { type: 'setMultiplier'; multiplier: Multiplier }
   | { type: 'setTheme'; theme: ThemeId }
   | { type: 'toggleQuestion' }
+  | { type: 'toggleMusic' }
   | { type: 'setPhase'; phase: LiveState['phase'] }
   | { type: 'adjustScore'; team: 0 | 1; delta: number }
   | { type: 'renameTeam'; team: 0 | 1; name: string }
@@ -30,6 +31,7 @@ export function newGame(game: Game, teamNames: [string, string], theme: ThemeId 
     showQuestion: false,
     multiplier: 1,
     theme,
+    music: true,
     teams: [
       { name: teamNames[0], score: 0 },
       { name: teamNames[1], score: 0 },
@@ -99,6 +101,8 @@ export function reduce(state: LiveState, action: Action): LiveState {
       return { ...state, multiplier: action.multiplier }
     case 'setTheme':
       return { ...state, theme: action.theme }
+    case 'toggleMusic':
+      return { ...state, music: !state.music }
     case 'toggleQuestion':
       return { ...state, showQuestion: !state.showQuestion }
     case 'setPhase':
