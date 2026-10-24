@@ -68,7 +68,10 @@ export function LibraryPage() {
   return (
     <div className="library">
       <header className="hero">
-        <Logo size="stage" />
+        <div className="hero__brand">
+          <Logo size="stage" />
+          <p className="hero__credit">Created by Ed St. Louis</p>
+        </div>
         <p className="hero__lede">
           Run a game night from your laptop. Import your survey questions, then put the board up on the TV for everyone
           to see.
