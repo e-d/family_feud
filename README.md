@@ -4,7 +4,7 @@ A single-page web app for running a game of Family Feud at home: import your own
 
 ## How it works
 
-1. **Import a game** — upload a CSV, JSON or plain-text file, or paste text (formats below). Games are saved in your browser.
+1. **Pick a ready-made game or import your own.** There are 14 ready-made games (six rounds each) across categories like Food & Drink, Kids, Animals and Grown-Ups, plus one per holiday that switches to its matching theme. Or upload a CSV, JSON or plain-text file, or paste text (formats below). Games are saved in your browser.
 2. **Play** — name the two families and start.
 3. **Open TV board** — opens the board in a new window. Drag it to the TV and click *Go full screen with sound* (or press `F`).
 4. **Pick a theme** when you start (Classic, Halloween, Thanksgiving, Christmas, Valentine's Day or Independence Day). You can switch it from the host panel mid-game; the TV updates live.

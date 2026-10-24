@@ -15,6 +15,10 @@ export interface Game {
   title: string
   questions: Question[]
   createdAt: number
+  /** Set when the game was added from a ready-made pack. */
+  packId?: string
+  /** Theme to preselect when starting this game. */
+  theme?: ThemeId
 }
 
 export interface Team {
